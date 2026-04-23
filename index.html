@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2157790319129830" crossorigin="anonymous"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KH90 Store | Official 3D Games</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+
+    <style>
+        :root { --primary: #ff4757; --bg: #121212; --card: #1e1e1e; --text: #f0f6fc; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; text-align: center; }
+        
+        header { background: var(--card); padding: 30px; border-bottom: 3px solid var(--primary); }
+        h1 { color: var(--primary); margin: 0; font-size: 3rem; letter-spacing: 3px; }
+        
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; }
+        
+        /* Main Game Card */
+        .featured-card { background: var(--card); padding: 40px; border-radius: 20px; border: 2px solid var(--primary); margin-bottom: 40px; }
+        
+        /* Search Section Style */
+        .search-box { background: var(--card); padding: 30px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; }
+        .search-input { width: 70%; padding: 12px; border-radius: 50px; border: 1px solid #444; background: #111; color: white; outline: none; }
+        .search-btn { padding: 12px 25px; border-radius: 50px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; margin-left: 10px; }
+        
+        /* Result Grid */
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+        .app-card { background: #252525; border-radius: 15px; padding: 25px; border: 1px solid var(--primary); transition: 0.3s; text-align: left; }
+        .app-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 71, 87, 0.2); }
+        
+        .app-card h3 { margin: 10px 0 5px 0; color: var(--primary); }
+        .app-card p { margin: 0 0 15px 0; font-size: 0.9rem; color: #8b949e; }
+        
+        .download-btn { background: var(--primary); color: white; text-decoration: none; padding: 12px 20px; border-radius: 50px; display: block; text-align: center; font-weight: bold; transition: 0.3s; }
+        .download-btn:hover { background: #ff6b81; }
+
+        #loadingMsg { margin-top: 20px; color: #8b949e; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        footer { margin-top: 50px; padding: 20px; color: #888; border-top: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>KH90 STORE</h1>
+        <p>Official 3D Games Dashboard</p>
+    </header>
+
+    <div class="container">
+        <div class="featured-card">
+            <div style="font-size: 4rem;">🏎️</div>
+            <h3>KH90 Car Game (Official)</h3>
+            <p>Original high-speed racing experience by KH90 Studio.</p>
+            <a href="kh90 car game.apk" class="download-btn" style="width: 200px; margin: auto;">Download APK</a>
+        </div>
+
+        <hr style="border: 1px solid #333; margin: 40px 0;">
+
+        <div class="search-box">
+            <h2>🔍 Live Store Apps</h2>
+            <p>ਗੇਮਾਂ ਦੀ ਲਿਸਟ ਆਪਣੇ ਆਪ ਅਪਡੇਟ ਹੁੰਦੀ ਹੈ</p>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by name...">
+            <button class="search-btn" onclick="searchGame()">SEARCH</button>
+            
+            <div id="loadingMsg">ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...</div>
+            <div id="searchResult" class="app-grid"></div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 KH90 Studio | Powered by KH90 Appwrite Console</footer>
+
+    <script>
+        // Appwrite Configuration
+        const client = new Appwrite.Client();
+        client
+            .setEndpoint('https://cloud.appwrite.io/v1')
+            .setProject('69e9906b001ce8c9d39c'); // ਤੁਹਾਡੀ Project ID
+
+        const databases = new Appwrite.Databases(client);
+        const databaseID = '69e992bb003825ccf359'; // ਤੁਹਾਡੀ Database ID
+        const collectionID = 'gameslist';           // ਤੁਹਾਡੀ Collection ID
+
+        // 1. ਗੇਮਾਂ ਨੂੰ ਲੋਡ ਕਰਨ ਵਾਲਾ ਫੰਕਸ਼ਨ
+        async function fetchAllGames() {
+            const resultDiv = document.getElementById('searchResult');
+            const loadingMsg = document.getElementById('loadingMsg');
+
+            try {
+                const response = await databases.listDocuments(databaseID, collectionID);
+                const games = response.documents;
+                
+                resultDiv.innerHTML = ""; 
+                loadingMsg.style.display = "none";
+                
+                if (games.length > 0) {
+                    games.forEach((game) => {
+                        resultDiv.innerHTML += `
+                            <div class="app-card" style="animation: fadeIn 0.5s;">
+                                <div style="font-size:3rem">🎮</div>
+                                <h3>${game.gameTitle}</h3>
+                                <p>Developer: ${game.developerName || 'KH90 Dev'}</p>
+                                <p style="font-size: 11px; color: #58a6ff;">${game.platform || 'Android'}</p>
+                                <a href="${game.downloadUrl}" class="download-btn" target="_blank">GET APK</a>
+                            </div>`;
+                    });
+                } else {
+                    resultDiv.innerHTML = "<p>ਹਾਲੇ ਤੱਕ ਕੋਈ ਗੇਮ ਅਪਲੋਡ ਨਹੀਂ ਕੀਤੀ ਗਈ।</p>";
+                }
+            } catch (error) {
+                console.error(error);
+                loadingMsg.innerText = "Error: ਗੇਮਾਂ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀਆਂ।";
+            }
+        }
+
+        // 2. ਸਰਚ ਫੰਕਸ਼ਨ
+        async function searchGame() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('searchResult');
+            
+            try {
+                const response = await databases.listDocuments(databaseID, collectionID);
+                const games = response.documents;
+                
+                resultDiv.innerHTML = "";
+                let found = false;
+
+                games.forEach((game) => {
+                    if (game.gameTitle.toLowerCase().includes(query)) {
+                        found = true;
+                        resultDiv.innerHTML += `
+                            <div class="app-card">
+                                <div style="font-size:3rem">🎮</div>
+                                <h3>${game.gameTitle}</h3>
+                                <p>Developer: ${game.developerName}</p>
+                                <a href="${game.downloadUrl}" class="download-btn" target="_blank">GET APK</a>
+                            </div>`;
+                    }
+                });
+
+                if (!found) {
+                    resultDiv.innerHTML = "<p style='color: var(--primary);'>ਕੋਈ ਗੇਮ ਨਹੀਂ ਮਿਲੀ।</p>";
+                }
+            } catch (error) {
+                alert("Search Error: " + error.message);
+            }
+        }
+
+        // ਪੇਜ ਖੁੱਲ੍ਹਦੇ ਹੀ ਸਾਰੀਆਂ ਗੇਮਾਂ ਦਿਖਾਓ
+        window.onload = fetchAllGames;
+    </script>
+</body>
+</html>
